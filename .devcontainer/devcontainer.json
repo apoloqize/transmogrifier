@@ -1,0 +1,61 @@
+{
+  "name": "Transmogrifier Dev Container",
+  // Configure dev container to build and run using the existing Dockerfile
+  "build": {
+    "dockerfile": "../Dockerfile", // Path to your Dockerfile relative to devcontainer.json
+    "context": "..", // Build context is the project root
+    // Optionally, you can target a specific stage from your Dockerfile.
+    // For development, you might have a 'dev' stage or use the 'builder' stage
+    // if it contains all necessary dev tools and dependencies before production stripping.
+    // If your 'builder' stage is suitable (e.g., has devDependencies installed), use:
+    // "target": "builder"
+  },
+
+  // Set the workspace folder inside the container
+  "workspaceFolder": "/app",
+
+  // Forward ports. Next.js typically runs on 3000.
+  "forwardPorts": [3000],
+
+  // Specify VS Code extensions to install inside the container
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint", // ESLint
+        "esbenp.prettier-vscode", // Prettier - Code formatter
+        "bradlc.vscode-tailwindcss", // Tailwind CSS IntelliSense
+        "ms-vscode.vscode-typescript-next", // Latest TypeScript and JavaScript language features
+        "ms-azuretools.vscode-docker", // Docker extension for managing Docker resources
+        "pflannery.vscode-versionlens", // Shows latest version for packages
+        "GitHub.vscode-pull-request-github" // GitHub Pull Requests and Issues
+      ],
+      // Set default VS Code settings for the project inside the container
+      "settings": {
+        "editor.formatOnSave": true,
+        "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[json]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "files.eol": "\n", // Ensure consistent line endings
+        "terminal.integrated.shell.linux": "/bin/bash" // Or /bin/zsh if preferred
+      }
+    }
+  },
+
+  // Run commands after the container is created
+  // The Dockerfile's builder stage already runs `npm ci`.
+  // If your source code's package-lock.json changes,
+  // you might want to run `npm install` here to sync.
+  "postCreateCommand": "npm install",
+
+  // Run as the non-root 'node' user available in the node:18-alpine image
+  "remoteUser": "node"
+}
